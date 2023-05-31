@@ -1,0 +1,20 @@
+.car-list-container {
+   
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  
+  .columns-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .column {
+    width: 50%;
+    border: 1px solid rgb(255, 255, 255);
+    font-family: 'Times New Roman';
+    text-decoration-color: rgb(207, 207, 207);
+    background-color: rgb(255, 0, 0);
+  }
+  
