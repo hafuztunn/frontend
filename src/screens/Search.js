@@ -1,79 +1,94 @@
 import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './CarSearch.css';
 
-const CarSearchForm = () => {
+function CarSearch() {
+  const [showForm, setShowForm] = useState(false);
   const [make, setMake] = useState('');
   const [cars, setCars] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleInputChange = event => {
-    setMake(event.target.value);
+  const handleButtonClick = () => {
+    setShowForm(!showForm);
+    setMake('');
+    setCars([]);
+    setErrorMessage('');
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
 
     fetch(`http://localhost:3001/searchbymake/${make}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data) {
-            console.log(data)
-          setCars(data.cars);
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.Success) {
+          setCars(data.car);
           setErrorMessage('');
-          
         } else {
           setCars([]);
           setErrorMessage(data.Message);
         }
       })
-      .catch(error => {
-        console.error('Error:', error);
+      .catch((error) => {
         setCars([]);
-        setErrorMessage('An error occurred while getting the cars.');
+        setErrorMessage('Error retrieving car data.');
       });
-
-      console.log(cars)
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <br />
-          <label htmlFor="make">
-            <strong>Enter Car Make:</strong>
-          </label>
-          <br />
-          <input
-            type="text"
-            className="form-control"
-            id="make"
-            value={make}
-            onChange={handleInputChange}
-          />
-        </div>
-        <br />
-        <button type="submit" className="btn btn-primary">
-          Search
-        </button>
-      </form>
+    <div className="container">
+      <h1>Car Search</h1>
+      <button
+        className={`btn ${showForm ? 'btn-danger' : 'btn-primary'}`}
+        onClick={handleButtonClick}
+      >
+        {showForm ? 'Hide Form' : 'Show Form'}
+      </button>
 
-      {cars.map(car => (
-          <ol>
-            <div key={car._id}>
-            <p>Make: {car.make}</p>
-              <p>Model: {car.model}</p>
-              <p>Year: {car.year}</p>
-            </div>
-            </ol> 
-          ))}
+      {showForm && (
+        <form onSubmit={handleFormSubmit} className="mt-3">
+          <div className="form-group">
+            <label htmlFor="make">Make:</label>
+            <input
+              type="text"
+              id="make"
+              className="form-control"
+              value={make}
+              onChange={(e) => setMake(e.target.value)}
+            />
+          </div>
 
-      {errorMessage && (
-        <div className="mt-4">
-          <p className="text-danger">{errorMessage}</p>
+          <button type="submit" className="btn btn-primary">Search</button>
+        </form>
+      )}
+
+      {errorMessage && <p>{errorMessage}</p>}
+
+      {cars.length > 0 && (
+        <div className="car-list">
+          <h2>Car List:</h2>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cars.map((car) => (
+                <tr key={car._id}>
+                  <td>{car.make}</td>
+                  <td>{car.model}</td>
+                  <td>{car.year}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
   );
-};
+}
 
-export default CarSearchForm;
+export default CarSearch;

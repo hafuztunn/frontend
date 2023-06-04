@@ -1,0 +1,10 @@
+.car-list {
+    margin-top: 20px;
+  }
+  
+  .table-bordered th,
+  .table-bordered td {
+    padding: 10px;
+    text-align: center;
+  }
+  

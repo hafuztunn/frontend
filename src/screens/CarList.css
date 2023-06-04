@@ -1,20 +1,50 @@
 .car-list-container {
-   
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-  
-  .columns-container {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .column {
-    width: 50%;
-    border: 1px solid rgb(255, 255, 255);
-    font-family: 'Times New Roman';
-    text-decoration-color: rgb(207, 207, 207);
-    background-color: rgb(255, 0, 0);
-  }
-  
+  padding: 20px;
+}
+
+.car-list-header {
+  background-color: blue;
+  padding: 10px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.car-list-header button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.car-list-header button:hover {
+  background-color: #45a049;
+}
+
+.car-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.car-table th,
+.car-table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid black;
+}
+
+.car-table th {
+  font-weight: bold;
+}
+
+.car-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}

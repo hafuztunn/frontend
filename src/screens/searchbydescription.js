@@ -4,6 +4,7 @@ const CarSearchForm = () => {
   const [keyword, setKeyword] = useState('');
   const [cars, setCars] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [formVisible, setFormVisible] = useState(false);
 
   const handleInputChange = event => {
     setKeyword(event.target.value);
@@ -30,39 +31,60 @@ const CarSearchForm = () => {
       });
   };
 
+  const handleToggleForm = () => {
+    setFormVisible(!formVisible);
+  };
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
+      <button  type="button" className="btn btn-primary" onClick={handleToggleForm}>
+        {formVisible ? 'Hide Form' : 'Show Form'}
+      </button>
+
+      {formVisible && (
+        <form onSubmit={handleSubmit} style={{ paddingLeft: '120px' }}>
+          <div className="form-group">
+            <br />
+            <label htmlFor="keyword">
+              <strong>Enter Keyword:</strong>
+            </label>
+            <br />
+            <input
+              type="text"
+              className="form-control"
+              id="keyword"
+              value={keyword}
+              onChange={handleInputChange}
+            />
+          </div>
           <br />
-          <label htmlFor="keyword">
-            <strong>Enter Keyword:</strong>
-          </label>
-          <br />
-          <input
-            type="text"
-            className="form-control"
-            id="keyword"
-            value={keyword}
-            onChange={handleInputChange}
-          />
-        </div>
-        <br />
-        <button type="submit" className="btn btn-primary">
-          Search
-        </button>
-      </form>
+          <button type="submit" className="btn btn-primary">
+            Search
+          </button>
+        </form>
+      )}
 
       {cars.length > 0 && (
         <div className="mt-4">
           <h2>Search Results:</h2>
-          {cars.map(car => (
-            <div key={car._id}>
-              <p>Make: {car.make}</p>
-              <p>Model: {car.model}</p>
-              <p>Description: {car.description}</p>
-            </div>
-          ))}
+          <table style={{ paddingLeft: '120px' }} className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cars.map(car => (
+                <tr key={car._id}>
+                  <td>{car.make}</td>
+                  <td>{car.model}</td>
+                  <td>{car.description}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 

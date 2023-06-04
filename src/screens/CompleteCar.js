@@ -1,114 +1,111 @@
 import React, { useState } from 'react';
 
-const CarSearchForm = () => {
+function CarSearch() {
   const [make, setMake] = useState('');
   const [model, setModel] = useState('');
   const [year, setYear] = useState('');
-  const [car, setCar] = useState(null);
+  const [carData, setCarData] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showForm, setShowForm] = useState(false);
 
-  const handleInputChange = (event, inputType) => {
-    const value = event.target.value;
-    if (inputType === 'make') {
-      setMake(value);
-    } else if (inputType === 'model') {
-      setModel(value);
-    } else if (inputType === 'year') {
-      setYear(value);
-    }
-  };
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
 
-  const handleSubmit = event => {
-    event.preventDefault();
-
-    fetch(`http://localhost:3001/searchbymakemodelyear?make=${make}&model=${model}&year=${year}`)
-      .then(response => response.json())
-      .then(data => {
+    fetch(`http://localhost:3001/${make}/${model}/${year}`)
+      .then((response) => response.json())
+      .then((data) => {
         if (data.Success) {
-            console.log(data)
-          setCar(data.car);
+          setCarData(data.car);
           setErrorMessage('');
         } else {
-          setCar(null);
+          setCarData(null);
           setErrorMessage(data.Message);
         }
       })
-      .catch(error => {
-        console.error('Error:', error);
-        setCar(null);
-        setErrorMessage('An error occurred while getting the car.');
+      .catch((error) => {
+        setCarData(null);
+        setErrorMessage('Error retrieving car data.');
       });
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <br />
-          <label htmlFor="make">
-            <strong>Make:</strong>
-          </label>
-          <br />
+      <h1>Car Search</h1>
+      <button className="btn btn-primary" onClick={() => setShowForm(true)}>Show Form</button>
+
+      {showForm && (
+        <form onSubmit={handleFormSubmit}>
+          <label htmlFor="make">Make:</label>
           <input
             type="text"
-            className="form-control"
             id="make"
             value={make}
-            onChange={event => handleInputChange(event, 'make')}
+            onChange={(e) => setMake(e.target.value)}
           />
-        </div>
-        <div className="form-group">
-          <br />
-          <label htmlFor="model">
-            <strong>Model:</strong>
-          </label>
-          <br />
+
+          <label htmlFor="model">Model:</label>
           <input
             type="text"
-            className="form-control"
             id="model"
             value={model}
-            onChange={event => handleInputChange(event, 'model')}
+            onChange={(e) => setModel(e.target.value)}
           />
-        </div>
-        <div className="form-group">
-          <br />
-          <label htmlFor="year">
-            <strong>Year:</strong>
-          </label>
-          <br />
+
+          <label htmlFor="year">Year:</label>
           <input
             type="text"
-            className="form-control"
             id="year"
             value={year}
-            onChange={event => handleInputChange(event, 'year')}
+            onChange={(e) => setYear(e.target.value)}
           />
-        </div>
-        <br />
-        <button type="submit" className="btn btn-primary">
+
+<button type="submit" className="btn btn-primary">
           Search
         </button>
-      </form>
+        </form>
+      )}
 
-      {car.map(car => (
-          <ol>
-            <div key={car._id}>
-            <p>Make: {car.make}</p>
-              <p>Model: {car.model}</p>
-              <p>Year: {car.year}</p>
-              
-            </div>
-            </ol> 
-          ))}
+      {errorMessage && <p>{errorMessage}</p>}
 
-      {errorMessage && (
-        <div className="mt-4">
-          <p className="text-danger">{errorMessage}</p>
+      {carData && (
+        <div>
+          <h2>Car Data:</h2>
+          <table style={{ borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={{ padding: '8px', border: '1px solid black' }}>Make</th>
+                <th style={{ padding: '8px', border: '1px solid black' }}>Model</th>
+                <th style={{ padding: '8px', border: '1px solid black' }}>Year</th>
+                <th style={{ padding: '8px', border: '1px solid black' }}>Price</th>
+                <th style={{ padding: '8px', border: '1px solid black' }}>Car-Type</th>
+                <th style={{ padding: '8px', border: '1px solid black' }}>Engine</th>
+                <th style={{ padding: '8px', border: '1px solid black' }}>Engine-Type</th>
+                <th style={{ padding: '8px', border: '1px solid black' }}>Description</th>
+                <th style={{ padding: '8px', border: '1px solid black' }}>Images</th>
+                {/* Add more columns here if needed */}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={{ padding: '8px', border: '1px solid black' }}>{carData.make}</td>
+                <td style={{ padding: '8px', border: '1px solid black' }}>{carData.model}</td>
+                <td style={{ padding: '8px', border: '1px solid black' }}>{carData.year}</td>
+                <td style={{ padding: '8px', border: '1px solid black' }}>{carData.price}</td>
+                <td style={{ padding: '8px', border: '1px solid black' }}>{carData.carType}</td>
+                <td style={{ padding: '8px', border: '1px solid black' }}>{carData.engine}</td>
+                <td style={{ padding: '8px', border: '1px solid black' }}>{carData.engineType}</td>
+                <td style={{ padding: '8px', border: '1px solid black' }}>{carData.description}</td>
+                <td style={{ padding: '8px', border: '1px solid black' }}>
+                  <img src={carData.images} alt="Car" style={{ width: '100px' }} />
+                </td>
+                {/* Render additional columns here */}
+              </tr>
+            </tbody>
+          </table>
         </div>
       )}
     </div>
   );
-};
+}
 
-export default CarSearchForm;
+export default CarSearch;
